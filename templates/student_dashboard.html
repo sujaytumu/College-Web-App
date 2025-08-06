@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-auto " style="height: screen; overflow: auto;">
+    <div class="container border-dark">
+        <h1 class="text-dark">Welcome, {{ username }}!</h1>
+    </div>
+    
+    <!-- Enrollment Form -->
+    <div class="card mb-4 border-dark ">
+        <div class="card-body">
+            <h5 class="card-title text-dark">Enroll in a Course</h5>
+            <form action="{{ url_for('dashboard', username=username) }}" method="post">
+                <div class="mb-3">
+                    <label for="course_id" class="form-label text-dark">Enter Course ID:</label>
+                    <input type="text" class="form-control text-dark border-dark" id="course_id" name="course_id" required>
+                </div>
+                <button type="submit" class="btn btn-light">Enroll</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Available Courses Section -->
+    <h3 class="mb-4 text-dark border-dark">Available Courses</h3>
+    <div class="row">
+        {% for course, instructor, department in courses %}
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm border-dark bg-white text-dark">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ course.Course_Name }}</h5>
+                        <p class="card-text">Course ID: <span class="text-dark">{{ course.Course_ID }}</span></p>
+                        <p class="card-text">Instructor Name: <span class="text-dark">{{ instructor.Instructor_Name }}</span></p>
+                        <p class="card-text">Department: <span class="text-dark">{{ department.Department_Name }}</span></p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Enrolled Courses Section -->
+    <h3 class="mb-4 text-dark">Your Enrolled Courses</h3>
+    <div class="row">
+        {% for course, enrollment in enrolled_courses %}
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm border-dark bg-white text-dark">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ course.Course_Name }}</h5>
+                        <p class="card-text">Course ID: <span class="text-dark">{{ course.Course_ID }}</span></p>
+                        <p class="card-text">Instructor Name: <span class="text-dark">{{ course.instructor.Instructor_Name }}</span></p>
+                        <p class="card-text">Department: <span class="text-dark">{{ course.department.Department_Name }}</span></p>
+
+                        <!-- Dropdown for additional enrollment details -->
+                        <button class="btn btn-light mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#enrollmentDetails{{ enrollment.Enrollment_ID }}" aria-expanded="false" aria-controls="enrollmentDetails{{ enrollment.Enrollment_ID }}">
+                            View Enrollment Details
+                        </button>
+                        <div class="collapse" id="enrollmentDetails{{ enrollment.Enrollment_ID }}">
+                            <ul class="list-group mt-3 bg-white text-dark border-dark">
+                                <li class="list-group-item bg-white text-dark border-dark">Enrollment ID: {{ enrollment.Enrollment_ID }}</li>
+                                <li class="list-group-item bg-white text-dark border-dark">Mid-Sem Score: {{ enrollment.Mid_Sem_Score }}</li>
+                                <li class="list-group-item bg-white text-dark border-dark">End-Sem Score: {{ enrollment.End_Sem_Score }}</li>
+                                <li class="list-group-item bg-white text-dark border-dark">Mid-Sem Date: {{ course.Mid_Sem_Date }}</li>
+                                <li class="list-group-item bg-white text-dark border-dark">End-Sem Date: {{ course.End_Sem_Date }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Report Card Section -->
+    <h3 class="mb-4 text-dark">Report Card</h3>
+    <div class="table-responsive mb-4">
+        <table class="table table-bordered table-hover bg-white text-dark" id="reportCardTable">
+            <thead>
+                <tr>
+                    <th>Course Name</th>
+                    <th>Course ID</th>
+                    <th>Mid-Sem Marks</th>
+                    <th>End-Sem Marks</th>
+                    <th>Mid-Sem Date</th>
+                    <th>End-Sem Date</th>
+                    <th>Instructor</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course, enrollment in enrolled_courses %}
+                    <tr>
+                        <td>{{ course.Course_Name }}</td>
+                        <td>{{ course.Course_ID }}</td>
+                        <td>{{ enrollment.Mid_Sem_Score }}</td>
+                        <td>{{ enrollment.End_Sem_Score }}</td>
+                        <td>{{ course.Mid_Sem_Date }}</td>
+                        <td>{{ course.End_Sem_Date }}</td>
+                        <td>{{ course.instructor.Instructor_Name }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Download Report Button -->
+    <button class="btn btn-primary" onclick="downloadReport()">Download Report</button>
+
+</div>
+
+
+<script>
+    function downloadReport() {
+        const table = document.getElementById('reportCardTable');
+        let csvContent = "data:text/csv;charset=utf-8,";
+        
+        // Add table headers
+        for (const th of table.querySelectorAll('thead th')) {
+            csvContent += th.innerText + ",";
+        }
+        csvContent = csvContent.slice(0, -1) + "\n";  // Remove last comma and add new line
+
+        // Add table rows
+        for (const row of table.querySelectorAll('tbody tr')) {
+            for (const cell of row.querySelectorAll('td')) {
+                csvContent += cell.innerText + ",";
+            }
+            csvContent = csvContent.slice(0, -1) + "\n";  // Remove last comma and add new line
+        }
+
+        // Create and click a download link
+        const link = document.createElement("a");
+        link.href = encodeURI(csvContent);
+        link.download = "Report_Card.csv";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+</script>
+
+{% endblock %}

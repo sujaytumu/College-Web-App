@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-7">
+    <div class="container mt-4">
+        <h1>Students Enrolled in Course {{ course_id }}</h1>
+        <a href="{{ url_for('dashboard', username=session['username']) }}" class="btn btn-secondary mt-4">Back to Dashboard</a>
+    </div>
+
+    <!-- Students Section -->
+    <h3 class="mb-4 mt-4">Enrolled Students</h3>
+    <div class="list-group">
+        {% for student in students %}
+            <div class="list-group-item">
+                <p>{{ student.Student_Name }} (ID: {{ student.Student_ID }})</p>
+                
+                <!-- Attendance Information -->
+                <p>Attendance Percentage: {{ student.Attendance_Percentage }}%</p>
+                
+                <!-- Form to update marks -->
+                <form action="{{ url_for('update_marks', course_id=course_id, student_id=student.Student_ID) }}" method="post" class="form-inline">
+                    <div class="row">
+                        <!-- Mid Sem Marks Input -->
+                        <div class="col-md-4">
+                            <label for="mid_sem_score_{{ student.Student_ID }}" class="form-label">Mid-Sem Marks: {{ student.Mid_Sem_Score }}</label>
+                            <input type="number" class="form-control" id="mid_sem_score_{{ student.Student_ID }}" name="mid_sem_score" min="0" max="100" required>
+                        </div>
+
+                        <!-- End Sem Marks Input -->
+                        <div class="col-md-4">
+                            <label for="end_sem_score_{{ student.Student_ID }}" class="form-label">End-Sem Marks: {{ student.End_Sem_Score }}</label>
+                            <input type="number" class="form-control" id="end_sem_score_{{ student.Student_ID }}" name="end_sem_score" min="0" max="100" required>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="col-md-4 align-self-end">
+                            <button type="submit" class="btn btn-primary">Update Marks</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

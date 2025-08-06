@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}
+Admin Dashboard
+{% endblock %}
+
+{% block content %}
+<div class="container mt-auto " style="height: screen; overflow: auto;">
+    <br>
+    <br>
+    <br>
+    <h1 class="text-center mb-4">Welcome, {{ username }}!</h1>
+
+    <!-- Section for displaying instructors -->
+    <h2 class="mb-4">Instructors List</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>Instructor ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for instructor in instructors %}
+                <tr>
+                    <td>{{ instructor.Instructor_ID }}</td>
+                    <td>{{ instructor.Instructor_Name }}</td>
+                    <td>{{ instructor.Email }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h2 class="mb-4">Courses List</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>Course Name</th>
+                    <th> Credit</th>
+                    <th>Instructor name </th>
+                    <th>Instructor Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course,details in courses.items() %}
+                <tr>
+                    <td>{{ details['course_name'] }}</td>
+                    <td>{{ details['credits'] }}</td>
+                    <td>{{ details['instructor_name'] }}</td>
+                    <td>{{ details['instructor_email'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Form to create a new course -->
+    <h2 class="mt-5 mb-3">Create New Course</h2>
+    <form action="{{ url_for('dashboard', username=username) }}" method="post" class="needs-validation" novalidate>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="course_name" class="form-label">Course Name:</label>
+                <input type="text" class="form-control" id="course_name" name="course_name" required>
+                <div class="invalid-feedback">Please provide a course name.</div>
+            </div>
+            <div class="col-md-6">
+                <label for="instructor_id" class="form-label">Instructor ID:</label>
+                <input type="number" class="form-control" id="instructor_id" name="instructor_id" required>
+                <div class="invalid-feedback">Please provide an instructor ID.</div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="credits" class="form-label">Credits:</label>
+                <input type="number" class="form-control" id="credits" name="credits" required>
+                <div class="invalid-feedback">Please provide credits.</div>
+            </div>
+            <div class="col-md-4">
+                <label for="department_id" class="form-label">Department ID:</label>
+                <input type="number" class="form-control" id="department_id" name="department_id">
+            </div>
+            <div class="col-md-4">
+                <label for="max_marks" class="form-label">Max Marks:</label>
+                <input type="number" class="form-control" id="max_marks" name="max_marks" required step="0.01">
+                <div class="invalid-feedback">Please provide maximum marks.</div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="mid_sem_date" class="form-label">Mid-Sem Date:</label>
+                <input type="date" class="form-control" id="mid_sem_date" name="mid_sem_date">
+            </div>
+            <div class="col-md-6">
+                <label for="end_sem_date" class="form-label">End-Sem Date:</label>
+                <input type="date" class="form-control" id="end_sem_date" name="end_sem_date">
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <input type="submit" class="btn btn-primary" value="Create Course">
+        </div>
+    </form>
+</div>
+{% endblock %}

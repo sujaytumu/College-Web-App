@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-7">
+<div class="container mt-4">
+    <h1>Students Enrolled in Course {{ course_id }}</h1>
+    <a href="{{ url_for('dashboard', username=session['username']) }}" class="btn btn-secondary mt-4">Back to Dashboard</a>
+</div>
+<h3>Mark Attendance for {{ course_name }}</h3>
+<form action="{{ url_for('mark_attendance', course_id=course_id) }}" method="post">
+    <div class="form-group">
+        <label for="date">Date:</label>
+        <input type="date" class="form-control" id="date" name="date" required>
+    </div>
+    {% for student in students %}
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="attendance" value="{{ student.Student_ID }}" id="student_{{ student.Student_ID }}">
+        <label class="form-check-label" for="student_{{ student.Student_ID }}">
+            {{ student.Student_Name }}
+        </label>
+        <input type="hidden" name="student_ids[]" value="{{ student.Student_ID }}">
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary mt-3">Submit Attendance</button>
+</form>
+
+</div>
+{% endblock %}

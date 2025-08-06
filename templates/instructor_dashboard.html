@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-7">
+    <div class="container mt-4">
+        <h1>Welcome, {{ username }}!</h1>
+        
+    </div>
+
+    <!-- Courses Section -->
+    <h3 class="mb-4 mt-4">Courses You Are Teaching</h3>
+    <div class="row">
+        {% for course in courses %}
+            <div class="col-md-4 mb-3 mt-5">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ course.Course_Name }}</h5>
+                        <p class="card-text">Course ID: {{ course.Course_ID }}</p>
+                        <p class="card-text">Credits: {{ course.Credits }}</p>
+                        
+                        <!-- Button to view enrolled students -->
+                        <a href="{{ url_for('students_in_course', course_id=course.Course_ID) }}" class="btn btn-primary">View Enrolled Students</a>
+                        <a href="{{ url_for('mark_attendance_page', course_id=course.Course_ID) }}" class="btn btn-secondary">Mark Attendance</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
