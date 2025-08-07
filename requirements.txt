@@ -1,5 +1,4 @@
 Flask==3.0.3
-SQLAlchemy==2.0.30  # ⚠️ risky with 3.13, but latest stable
 PyMySQL==1.1.0
 python-dotenv==1.0.1
 gunicorn==21.2.0

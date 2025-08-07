@@ -60,6 +60,11 @@ Admin Dashboard
 
     <!-- Form to create a new course -->
     <h2 class="mt-5 mb-3">Create New Course</h2>
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+    {% endif %}
     <form action="{{ url_for('dashboard', username=username) }}" method="post" class="needs-validation" novalidate>
         <div class="row mb-3">
             <div class="col-md-6">
@@ -81,8 +86,14 @@ Admin Dashboard
                 <div class="invalid-feedback">Please provide credits.</div>
             </div>
             <div class="col-md-4">
-                <label for="department_id" class="form-label">Department ID:</label>
-                <input type="number" class="form-control" id="department_id" name="department_id">
+                <label for="department_id" class="form-label">Department:</label>
+                <select class="form-control" id="department_id" name="department_id" required>
+                    <option value="">Select Department</option>
+                    {% for department in departments %}
+                    <option value="{{ department.Department_ID }}">{{ department.Department_Name }}</option>
+                    {% endfor %}
+                </select>
+                <div class="invalid-feedback">Please select a department.</div>
             </div>
             <div class="col-md-4">
                 <label for="max_marks" class="form-label">Max Marks:</label>
