@@ -33,8 +33,8 @@ Student Management System</h1>
 #### 1. Clone the repo
 
 ```bash
-git clone https://github.com/your-username/student-management-system.git
-cd student-management-system
+git clone https://github.com/sujaytumu/College-Web-App.git
+cd College-Web-App
 ```
 
 #### 2. Set up Python environment
