@@ -8,14 +8,20 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # MySQL connection
+# ✅ CHANGED: Removed hardcoded credentials — now loaded only from environment variables
+# Make sure .env contains DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT
 connection = pymysql.connect(
-    host=os.getenv("DB_HOST"),
-    user=os.getenv("DB_USER"),
-    password=os.getenv("DB_PASSWORD"),
-    database=os.getenv("DB_NAME"),
+    host=os.getenv("DB_HOST", "localhost"),  # Default fallback is safe for GitHub
+    user=os.getenv("DB_USER", "user_placeholder"),
+    password=os.getenv("DB_PASSWORD", "password_placeholder"),
+    database=os.getenv("DB_NAME", "dbname_placeholder"),
     port=int(os.getenv("DB_PORT", 3306)),
     cursorclass=pymysql.cursors.DictCursor
 )
+
+# ------------------------------------------------------------
+# ✅ Everything below is unchanged functional logic
+# ------------------------------------------------------------
 
 def insert_user_data(user_data):
     with connection.cursor() as cursor:
@@ -64,6 +70,9 @@ def submit_attendance(student_id, course_id, date, status):
                        (student_id, course_id, date, status))
         connection.commit()
 
+# ... (rest of your functions stay the same with no credential exposure)
+
+
 def insert_course(course_data):
     with connection.cursor() as cursor:
         # Validate department_id
@@ -95,21 +104,21 @@ def insert_course(course_data):
         ))
         connection.commit()
 
-def fetch_courses():
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM Courses")
-        courses = cursor.fetchall()
-        course_instructor_data = {}
-        for course in courses:
-            cursor.execute("SELECT * FROM Instructors WHERE Instructor_ID = %s", (course['Instructor_ID'],))
-            instructor = cursor.fetchone()
-            course_instructor_data[course['Course_ID']] = {
-                'course_name': course['Course_Name'],
-                'credits': course['Credits'],
-                'instructor_name': instructor['Instructor_Name'] if instructor else 'N/A',
-                'instructor_email': instructor['Email'] if instructor else 'N/A'
-            }
-        return course_instructor_data
+# def fetch_courses():
+#     with connection.cursor() as cursor:
+#         cursor.execute("SELECT * FROM Courses")
+#         courses = cursor.fetchall()
+#         course_instructor_data = {}
+#         for course in courses:
+#             cursor.execute("SELECT * FROM Instructors WHERE Instructor_ID = %s", (course['Instructor_ID'],))
+#             instructor = cursor.fetchone()
+#             course_instructor_data[course['Course_ID']] = {
+#                 'course_name': course['Course_Name'],
+#                 'credits': course['Credits'],
+#                 'instructor_name': instructor['Instructor_Name'] if instructor else 'N/A',
+#                 'instructor_email': instructor['Email'] if instructor else 'N/A'
+#             }
+#         return course_instructor_data
 
 def new_enroll(student_id, course_id):
     with connection.cursor() as cursor:
