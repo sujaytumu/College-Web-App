@@ -104,21 +104,21 @@ def insert_course(course_data):
         ))
         connection.commit()
 
-# def fetch_courses():
-#     with connection.cursor() as cursor:
-#         cursor.execute("SELECT * FROM Courses")
-#         courses = cursor.fetchall()
-#         course_instructor_data = {}
-#         for course in courses:
-#             cursor.execute("SELECT * FROM Instructors WHERE Instructor_ID = %s", (course['Instructor_ID'],))
-#             instructor = cursor.fetchone()
-#             course_instructor_data[course['Course_ID']] = {
-#                 'course_name': course['Course_Name'],
-#                 'credits': course['Credits'],
-#                 'instructor_name': instructor['Instructor_Name'] if instructor else 'N/A',
-#                 'instructor_email': instructor['Email'] if instructor else 'N/A'
-#             }
-#         return course_instructor_data
+def fetch_courses():
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM Courses")
+        courses = cursor.fetchall()
+        course_instructor_data = {}
+        for course in courses:
+            cursor.execute("SELECT * FROM Instructors WHERE Instructor_ID = %s", (course['Instructor_ID'],))
+            instructor = cursor.fetchone()
+            course_instructor_data[course['Course_ID']] = {
+                'course_name': course['Course_Name'],
+                'credits': course['Credits'],
+                'instructor_name': instructor['Instructor_Name'] if instructor else 'N/A',
+                'instructor_email': instructor['Email'] if instructor else 'N/A'
+            }
+        return course_instructor_data
 
 def new_enroll(student_id, course_id):
     with connection.cursor() as cursor:
