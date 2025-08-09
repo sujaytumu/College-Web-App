@@ -115,12 +115,3 @@ git commit -m "Add: your feature"
 git push origin feature/your-feature
 ```
 
-## 🌍 Contact
-
-**💻 Author: Ashwa**<br>
-📧 Email: aryankaushik207@gmail.com<br>
-🐙 GitHub: [@aryan1921](https://github.com/aryan1921)<br>
-
-<p align="center">
-  <b>Built with clarity for classrooms. 🎓</b>
-</p>
